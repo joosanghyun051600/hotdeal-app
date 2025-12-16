@@ -13,11 +13,20 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stApp { background-color: #f8f9fa; }
-    /* 탭 디자인 */
+    
+    /* 사이드바 디자인 */
+    [data-testid="stSidebar"] {
+        background-color: #ffffff;
+        border-right: 1px solid #e0e0e0;
+    }
+    
+    /* 탭 버튼 디자인 */
     button[data-baseweb="tab"] {
         font-size: 16px;
         font-weight: 600;
     }
+    
+    /* 카드 박스 디자인 */
     div[data-testid="stContainer"] {
         background-color: white;
         padding: 15px;
@@ -28,23 +37,21 @@ st.markdown("""
     div[data-testid="stContainer"]:hover {
         transform: translateY(-5px);
     }
+    
+    /* 버튼 공통 디자인 */
     .stButton>button {
         width: 100%;
-        background-color: #333333;
-        color: white;
-        border: none;
         border-radius: 8px;
         height: 40px;
+        font-weight: bold;
     }
-    .stButton>button:hover { background-color: #000000; color: white; }
     img { border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- [3] 만능 데이터 엔진 (카테고리 번호만 넣으면 됨!) ---
+# --- [3] 만능 데이터 엔진 ---
 @st.cache_data(ttl=600)
 def get_yes24_data(category_num):
-    # categoryNumber 뒤에 숫자를 바꿔끼울 수 있게 만들었습니다.
     url = f"https://www.yes24.com/Product/Category/BestSeller?categoryNumber={category_num}"
     headers = {'User-Agent': 'Mozilla/5.0'}
     
@@ -56,13 +63,9 @@ def get_yes24_data(category_num):
         results = []
         for item in items:
             try:
-                # 1. 제목
                 title = item.select_one(".gd_name").get_text(strip=True)
-                # 2. 링크
                 link = "https://www.yes24.com" + item.select_one(".gd_name")['href']
-                # 3. 가격
                 price = item.select_one(".yes_b").get_text(strip=True)
-                # 4. 이미지
                 img_tag = item.select_one("img")
                 img_url = img_tag.get('data-original') or img_tag.get('src')
                 
@@ -72,24 +75,56 @@ def get_yes24_data(category_num):
                     "링크": link,
                     "이미지": img_url
                 })
-                if len(results) >= 8: # 탭마다 8개씩만 보여주기
+                if len(results) >= 8: 
                     break
             except: continue
         return results
     except: return []
 
-# --- [4] 화면 구성 ---
+# --- [4] 메인 화면 ---
 def main():
-    st.title(" linchpin deal ")
+    # ---------------------------------------------------------
+    # [NEW] 사이드바: 명함 및 연락처 기능 추가
+    # ---------------------------------------------------------
+    with st.sidebar:
+        st.title("🏢 린치핀 마케팅")
+        st.markdown("---") # 구분선
+        
+        # 소개글
+        st.info("비즈니스 성장을 돕는\n최적의 솔루션을 제공합니다.")
+        
+        # 연락처 정보
+        st.caption("📞 Contact")
+        st.text("010-1234-5678") # 본인 번호로 수정 가능
+        st.text("email@linchpin.com") # 이메일 수정 가능
+        
+        st.markdown("---") # 구분선
+        
+        # [핵심] 카카오톡 오픈채팅 버튼
+        # 아래 주소를 본인의 오픈채팅방 주소로 바꿔주세요!
+        kakao_url = "https://open.kakao.com/o/sXxxxxx" 
+        
+        st.link_button(
+            "💬 1:1 오픈채팅 문의하기", 
+            kakao_url, 
+            use_container_width=True,
+            help="클릭하면 카카오톡으로 연결됩니다."
+        )
+        
+        st.markdown("---")
+        st.caption("ⓒ 2025 Linchpin Marketing")
+    # ---------------------------------------------------------
+
+    # 메인 컨텐츠
+    st.title("💎 린치핀 good deal ")
     st.caption("당신의 성장을 위한 분야별 베스트 정보를 실시간으로 제공합니다.")
 
-    # 탭 메뉴 정의
     tab1, tab2, tab3, tab4 = st.tabs(["🍳 맛집/요리", "✈️ 여행/숙박", "💪 건강/헬스", "📈 마케팅/트렌드"])
 
-    # --- 탭 1: 맛집/요리 (카테고리 번호: 001001011) ---
+    # 탭 1: 맛집 (요리)
     with tab1:
-        st.info("🔥 요즘 뜨는 요리법과 맛집 가이드북을 모았습니다.")
-        data = get_yes24_data("001001011") # 요리 카테고리 번호
+        st.success("🔥 요즘 뜨는 요리법과 맛집 가이드북을 모았습니다.")
+        data = get_yes24_data("001001011") 
         if data:
             cols = st.columns(4)
             for i, item in enumerate(data):
@@ -100,10 +135,10 @@ def main():
                         st.caption(item['가격'])
                         st.link_button("보러가기", item['링크'], use_container_width=True)
 
-    # --- 탭 2: 여행/숙박 (카테고리 번호: 001001009) ---
+    # 탭 2: 여행
     with tab2:
         st.info("✈️ 떠나고 싶은 당신을 위한 추천 여행 가이드입니다.")
-        data = get_yes24_data("001001009") # 여행 카테고리 번호
+        data = get_yes24_data("001001009") 
         if data:
             cols = st.columns(4)
             for i, item in enumerate(data):
@@ -114,10 +149,10 @@ def main():
                         st.caption(item['가격'])
                         st.link_button("보러가기", item['링크'], use_container_width=True)
 
-    # --- 탭 3: 건강/헬스 (카테고리 번호: 001001046) ---
+    # 탭 3: 건강
     with tab3:
-        st.info("💪 건강한 신체를 위한 필독서입니다.")
-        data = get_yes24_data("001001046") # 건강 카테고리 번호
+        st.warning("💪 건강한 신체를 위한 필독서입니다.")
+        data = get_yes24_data("001001046") 
         if data:
             cols = st.columns(4)
             for i, item in enumerate(data):
@@ -128,10 +163,10 @@ def main():
                         st.caption(item['가격'])
                         st.link_button("보러가기", item['링크'], use_container_width=True)
     
-    # --- 탭 4: 마케팅 (카테고리 번호: 001) ---
+    # 탭 4: 마케팅
     with tab4:
-        st.info("📈 성공을 부르는 비즈니스 인사이트입니다.")
-        data = get_yes24_data("001") # 종합 베스트셀러
+        st.error("📈 성공을 부르는 비즈니스 인사이트입니다.")
+        data = get_yes24_data("001") 
         if data:
             cols = st.columns(4)
             for i, item in enumerate(data):
@@ -144,4 +179,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
