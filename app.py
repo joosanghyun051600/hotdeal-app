@@ -137,10 +137,10 @@ def main():
             use_container_width=True
         )
 
-        # 2. 카카오톡 채팅 버튼
-        kakao_url = "https://pf.kakao.com/_UMxbznx" 
+        # 2. 카카오톡 오픈채팅 버튼
+        kakao_url = "https://open.kakao.com/o/sXxxxxx" 
         st.link_button(
-            "💬 1:1 채팅 문의하기", 
+            "💬 1:1 오픈채팅 문의하기", 
             kakao_url, 
             use_container_width=True
         )
@@ -150,13 +150,13 @@ def main():
     # ---------------------------------------------------------
 
     # 메인 컨텐츠
-    st.title("💎 린치핀 핫딜 💎 ")
+    st.title("💎 린치핀 라이프스타일 큐레이션")
     st.caption("당신의 성장을 위한 분야별 베스트 정보를 실시간으로 제공합니다.")
 
-    tab1, tab2, tab3, tab4 = st.tabs(["🍳 맛집", "✈️ 숙박", "💪 건강/헬스", "📈 마케팅/트렌드"])
+    tab1, tab2, tab3, tab4 = st.tabs(["🍳 맛집/요리", "✈️ 여행/숙박", "💪 건강/헬스", "📈 마케팅/트렌드"])
 
     with tab1:
-        st.success("🔥 린치핀 핫딜 체험단")
+        st.success("🔥 요즘 뜨는 요리법과 맛집 가이드북을 모았습니다.")
         data = get_yes24_data("001001011") 
         if data:
             cols = st.columns(4)
@@ -188,3 +188,24 @@ def main():
             cols = st.columns(4)
             for i, item in enumerate(data):
                 with cols[i % 4]:
+                    with st.container():
+                        st.image(item['이미지'], use_container_width=True)
+                        st.markdown(f"**{item['상품명'][:16]}...**")
+                        st.caption(item['가격'])
+                        st.link_button("보러가기", item['링크'], use_container_width=True)
+    
+    with tab4:
+        st.error("📈 성공을 부르는 비즈니스 인사이트입니다.")
+        data = get_yes24_data("001") 
+        if data:
+            cols = st.columns(4)
+            for i, item in enumerate(data):
+                with cols[i % 4]:
+                    with st.container():
+                        st.image(item['이미지'], use_container_width=True)
+                        st.markdown(f"**{item['상품명'][:16]}...**")
+                        st.caption(item['가격'])
+                        st.link_button("보러가기", item['링크'], use_container_width=True)
+
+if __name__ == "__main__":
+    main()
