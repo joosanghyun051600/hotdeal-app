@@ -72,7 +72,7 @@ def main():
             st.cache_data.clear()
             st.rerun()
 
-    st.title("🔥 실시간 베스트 핫딜")
+    st.title("🔥 linchpin deal")
     st.divider()
 
     data = get_hot_deals()
@@ -93,4 +93,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
