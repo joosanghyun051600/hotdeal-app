@@ -95,17 +95,17 @@ def main():
         
         # 연락처 정보
         st.caption("📞 Contact")
-        st.text("010-1234-5678") # 본인 번호로 수정 가능
-        st.text("email@linchpin.com") # 이메일 수정 가능
+        st.text("010-5802-6463") # 본인 번호로 수정 가능
+        st.text("csp051600@naver.com") # 이메일 수정 가능
         
         st.markdown("---") # 구분선
         
         # [핵심] 카카오톡 오픈채팅 버튼
         # 아래 주소를 본인의 오픈채팅방 주소로 바꿔주세요!
-        kakao_url = "https://open.kakao.com/o/sXxxxxx" 
+        kakao_url = "https://pf.kakao.com/_UMxbzn" 
         
         st.link_button(
-            "💬 1:1 오픈채팅 문의하기", 
+            "💬 1:1 채팅 문의하기", 
             kakao_url, 
             use_container_width=True,
             help="클릭하면 카카오톡으로 연결됩니다."
@@ -179,3 +179,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
